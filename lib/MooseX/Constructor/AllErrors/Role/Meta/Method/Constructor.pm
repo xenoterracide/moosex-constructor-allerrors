@@ -39,7 +39,7 @@ for my \$required_attr (keys \%required_attrs) {
 my \%tc_attrs = (@tc);
 for my \$tc_attr (keys \%tc_attrs) {
   next unless exists \$params->{\$tc_attr};
-  next if find_type_constraint(\$tc_attrs{\$tc_attr})->check(
+  next if Moose::Util::TypeConstraints::find_type_constraint(\$tc_attrs{\$tc_attr})->check(
     \$params->{\$tc_attr}
   );
   \$all_errors->add_error(
