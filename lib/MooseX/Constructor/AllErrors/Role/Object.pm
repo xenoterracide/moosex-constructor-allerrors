@@ -33,10 +33,15 @@ around BUILDARGS => sub {
 
     next unless exists $args->{$init_arg} && $attr->has_type_constraint;
 
-    unless ($attr->type_constraint->check($args->{$init_arg})) {
+    my $tc = $attr->type_constraint;
+    my $value = $tc->has_coercion && $attr->should_coerce
+        ? $tc->coerce($args->{$init_arg})
+        : $args->{$init_arg};
+
+    unless ($tc->check($value)) {
       $error->add_error($new_error->(TypeConstraint => {
         attribute => $attr,
-        data      => $args->{$init_arg},
+        data      => $value,
       }));
       next;
     }

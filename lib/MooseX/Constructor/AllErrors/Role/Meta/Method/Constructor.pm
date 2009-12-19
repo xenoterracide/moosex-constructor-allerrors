@@ -21,6 +21,9 @@ around _generate_BUILDALL => sub {
     q{'} . $_->init_arg . q{' => '} . $_->type_constraint->name . q{',}
   } grep {  $_->has_type_constraint } @attrs;
 
+  my @coerce = map { "'" . $_->init_arg . "' => 1," }
+    grep { $_->should_coerce } @attrs ;
+
 
   $source .= <<"EOF";
 my \$all_errors = MooseX::Constructor::AllErrors::Error::Constructor->new(
@@ -37,16 +40,19 @@ for my \$required_attr (keys \%required_attrs) {
   );
 }
 my \%tc_attrs = (@tc);
+my \%should_coerce = (@coerce);
 for my \$tc_attr (keys \%tc_attrs) {
   next unless exists \$params->{\$tc_attr};
-  next if Moose::Util::TypeConstraints::find_type_constraint(\$tc_attrs{\$tc_attr})->check(
-    \$params->{\$tc_attr}
-  );
+  my \$tc = Moose::Util::TypeConstraints::find_type_constraint(\$tc_attrs{\$tc_attr});
+  my \$value = \$tc->has_coercion && \$should_coerce{\$tc_attr}
+    ? \$tc->coerce(\$params->{\$tc_attr})
+    : \$params->{\$tc_attr};
+  next if \$tc->check(\$value);
   \$all_errors->add_error(
     MooseX::Constructor::AllErrors::Error::TypeConstraint->new(
       attribute =>
         Moose::Util::find_meta(\$instance)->get_attribute(\$tc_attr),
-      data => \$params->{\$tc_attr},
+      data => \$value,
     )
   );
 }
