@@ -1,11 +1,10 @@
 package MooseX::Constructor::AllErrors::Error::Constructor;
 
 use Moose;
-extends 'MooseX::Constructor::AllErrors::Error';
 
 has errors => (
     is => 'ro',
-    isa => 'ArrayRef',
+    isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error]',
     auto_deref => 1,
     lazy => 1,
     default => sub { [] },
@@ -26,7 +25,7 @@ sub _errors_by_type {
 
 has missing => (
     is => 'ro',
-    isa => 'ArrayRef',
+    isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error::Required]',
     auto_deref => 1,
     lazy => 1,
     default => sub { shift->_errors_by_type('Required') },
@@ -34,7 +33,7 @@ has missing => (
 
 has invalid => (
     is => 'ro',
-    isa => 'ArrayRef',
+    isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error::TypeConstraint]',
     auto_deref => 1,
     lazy => 1,
     default => sub { shift->_errors_by_type('TypeConstraint') },
