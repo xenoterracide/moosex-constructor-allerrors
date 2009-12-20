@@ -3,6 +3,11 @@ package MooseX::Constructor::AllErrors;
 use Moose ();
 use Moose::Exporter;
 
+use MooseX::Constructor::AllErrors::Error;
+use MooseX::Constructor::AllErrors::Error::Constructor;
+use MooseX::Constructor::AllErrors::Error::Required;
+use MooseX::Constructor::AllErrors::Error::TypeConstraint;
+
 Moose::Exporter->setup_import_methods(
     base_class_roles => [ 'MooseX::Constructor::AllErrors::Role::Object' ],
     constructor_class_roles => [
