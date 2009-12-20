@@ -1,3 +1,7 @@
+0.009   2009-12-20
+
+  * document the error classes
+
 0.008   2009-12-19
 
   * fix constructor trait using find_type_constraint without importing it
