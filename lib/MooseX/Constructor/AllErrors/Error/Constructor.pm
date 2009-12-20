@@ -70,3 +70,47 @@ use overload (
 );
 
 1;
+__END__
+
+=head1 NAME
+
+MooseX::Constructor::AllErrors::Error::Constructor - error class for MooseX::Constructor::AllErrors
+
+=head1 DESCRIPTION
+
+C<$@> will contain an instance of this class when
+L<MooseX::Constructor::AllErrors> throws an exception during object
+construction.
+
+=head1 METHODS
+
+=head2 errors
+
+Returns a list of L<MooseX::Constructor::AllErrors::Error> objects representing
+each error that was found.
+
+=head2 invalid
+
+Returns a list of L<MooseX::Constructor::AllErrors::Error::Required> objects
+representing each missing argument error that was found.
+
+=head2 missing
+
+Returns a list of L<MooseX::Constructor::AllErrors::Error::TypeConstraint>
+objects representing each type constraint error that was found.
+
+=head1 SEE ALSO
+
+L<Moose>
+
+=head1 AUTHOR
+
+  Hans Dieter Pearcey <hdp@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Hans Dieter Pearcey. This is free
+software; you can redistribute it and/or modify it under the same terms as perl
+itself. 
+
+=cut
