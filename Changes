@@ -1,3 +1,7 @@
+0.010   2009-01-17
+
+  * dep on Test::Exception, since Moose only test_requires
+
 0.009   2009-12-20
 
   * document the error classes
