@@ -43,7 +43,7 @@ sub tests {
   is($t->attribute, Foo->meta->get_attribute('baz'));
   is($t->data, 'hello');
   is($t->message,
-    q{Attribute (baz) does not pass the type constraint because: Validation failed for 'Int' failed with value hello}
+    q{Attribute (baz) does not pass the type constraint because: Validation failed for 'Int' with value hello}
   );
 
   is(
