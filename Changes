@@ -1,4 +1,5 @@
 
+  * Use modern Moose APIs, to avoid warnings with Moose 1.09 (ether)
   * fix documentation mixup in
     MooseX::Constructor::AllErrors::Error::Constructor (ether)
 
