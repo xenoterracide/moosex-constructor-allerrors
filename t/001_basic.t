@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 30;
+use Test::More tests => 38;
 
 {
     package Foo;
@@ -22,6 +22,16 @@ use Test::More tests => 30;
         is => 'ro',
         trigger => sub { my ($x, $y) = (1, 0); $x / $y; },
     );
+
+    has bletch => (
+        is => 'ro', isa => 'Int'
+    );
+
+    sub BUILD
+    {
+        my $this = shift;
+        $this->bletch($this->baz) if $this->baz;
+    }
 
     no Moose;
     no MooseX::Constructor::AllErrors;
@@ -46,6 +56,16 @@ sub tests {
         q{Attribute (baz) does not pass the type constraint because: Validation failed for 'Int' with value hello}
     );
 
+    TODO: {
+        local $TODO = 'BUILD errors are not yet caught';
+        isa_ok($t = $e->errors->[2], 'MooseX::Constructor::AllErrors::Error::TypeConstraint') or todo_skip 'doh', 3;
+        is($t->attribute, Foo->meta->get_attribute('bletch'));
+        is($t->data, 'hello');
+        is($t->message,
+            q{Attribute (bletch) does not pass the type constraint because: Validation failed for 'Int' with value hello}
+        );
+    }
+
     is(
         $e->message,
         $e->errors->[0]->message,
@@ -64,7 +84,8 @@ sub tests {
         'correct invalid',
     );
 
-    is("$e", "Attribute (bar) is required at " . __FILE__ . " line 35");
+    my $pattern = 'Attribute \(bar\) is required at ' . __FILE__ . " line \\d{2}";
+    like("$e", qr/$pattern/);
 
     eval { Foo->new(bar => 1, quux => 1) };
     like $@, qr/Illegal division by zero/, "unrecognized error rethrown";

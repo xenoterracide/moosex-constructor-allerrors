@@ -9,6 +9,7 @@ has attribute => (
     required => 1,
 );
 
+# for internal use only
 has data => (
     is => 'ro',
     required => 1,
