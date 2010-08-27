@@ -1,3 +1,7 @@
+
+  * fix documentation mixup in
+    MooseX::Constructor::AllErrors::Error::Constructor (ether)
+
 0.011   2010-06-15
 
   * fix test for moose doublefail stuff
