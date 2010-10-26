@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More tests => 3;
-use Test::Exception;
+use Test::Fatal;
 
 {
     use Moose::Util::TypeConstraints;
@@ -33,14 +33,14 @@ use Test::Exception;
     Bar->meta->make_immutable;
 }
 
-lives_ok{
+ok ! exception {
     Bar->new( short_str => 'a')
-} 'Instance of Test Class without MooseX::Constructor::AllErrors lives';
+}, 'Instance of Test Class without MooseX::Constructor::AllErrors lives';
 
-dies_ok{
+ok exception {
     Bar->new( short_str => 'aaaaaaaa' );
-} '... and dies with incorrect input ( Type Constraint is effective )';
+}, '... and dies with incorrect input ( Type Constraint is effective )';
 
-lives_ok{
+ok ! exception {
     Foo->new( short_str => 'a')
-} 'Instance of Test Class WITH MooseX::Constructor::AllErrors lives';
+}, 'Instance of Test Class WITH MooseX::Constructor::AllErrors lives';
