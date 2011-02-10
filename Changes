@@ -1,8 +1,14 @@
+0.013   2011-02-09
 
   * The test suite now uses Test::Fatal instead of Test::Exception. (ether)
   * Use modern Moose APIs, to avoid warnings with Moose 1.09 (ether)
   * fix documentation mixup in
     MooseX::Constructor::AllErrors::Error::Constructor (ether)
+  * moose inlining changes (doy)
+
+0.012   2010-07-19
+
+  * fix for moose deprecation stuff
 
 0.011   2010-06-15
 
