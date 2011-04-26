@@ -52,8 +52,8 @@ sub tests {
     isa_ok($t = $e->errors->[1], 'MooseX::Constructor::AllErrors::Error::TypeConstraint');
     is($t->attribute, Foo->meta->get_attribute('baz'));
     is($t->data, 'hello');
-    is($t->message,
-        q{Attribute (baz) does not pass the type constraint because: Validation failed for 'Int' with value hello}
+    like($t->message,
+        qr{^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'Int' with value .*hello.*}
     );
 
     TODO: {
@@ -61,8 +61,8 @@ sub tests {
         isa_ok($t = $e->errors->[2], 'MooseX::Constructor::AllErrors::Error::TypeConstraint') or todo_skip 'doh', 3;
         is($t->attribute, Foo->meta->get_attribute('bletch'));
         is($t->data, 'hello');
-        is($t->message,
-            q{Attribute (bletch) does not pass the type constraint because: Validation failed for 'Int' with value hello}
+        like($t->message,
+            qr{Attribute \(bletch\) does not pass the type constraint because: Validation failed for 'Int' with value .*hello.*}
         );
     }
 
