@@ -31,16 +31,25 @@ use warnings;
 use Test::More;
 use Test::Moose qw(with_immutable);
 
+my @classes = qw(Parent Child);
+
 with_immutable
 {
     $Parent::BUILD = 0;
     $Child::BUILD = 0;
 
+    my $obj = Parent->new;
+    is($Parent::BUILD, 1, "Parent's BUILD was run when constructed directly");
+
+
+    $Parent::BUILD = 0;
+    $Child::BUILD = 0;
+
     my $obj = Child->new;
 
-    is($Child::BUILD, 1, "Child's BUILD was run");
-    is($Parent::BUILD, 1, "Parent's BUILD was run");
+    is($Child::BUILD, 1, "Child's BUILD was run when Child is constructed");
+    is($Parent::BUILD, 1, "Parent's BUILD was run when Child is constructed");
 }
-qw(Child);
+@classes;
 
 done_testing;
