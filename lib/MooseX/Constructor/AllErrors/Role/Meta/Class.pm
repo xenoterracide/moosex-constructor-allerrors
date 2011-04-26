@@ -22,6 +22,7 @@ around _inline_BUILDALL => sub {
     } grep { $_->should_coerce } @attrs;
 
     return (
+        @source,
         'my $all_errors = MooseX::Constructor::AllErrors::Error::Constructor->new(',
             'caller => [caller(1)]',
         ');',
