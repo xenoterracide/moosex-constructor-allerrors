@@ -1,3 +1,7 @@
+0.014   2011-04-26
+
+  * Fix test suite for Moose error message changes (doy)
+
 0.013   2011-02-09
 
   * The test suite now uses Test::Fatal instead of Test::Exception. (ether)
