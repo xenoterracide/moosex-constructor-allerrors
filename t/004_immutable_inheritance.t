@@ -35,20 +35,23 @@ my @classes = qw(Parent Child);
 
 with_immutable
 {
-    $Parent::BUILD = 0;
-    $Child::BUILD = 0;
+    {
+        $Parent::BUILD = 0;
+        $Child::BUILD = 0;
 
-    my $obj = Parent->new;
-    is($Parent::BUILD, 1, "Parent's BUILD was run when constructed directly");
+        my $obj = Parent->new;
+        is($Parent::BUILD, 1, "Parent's BUILD was run when constructed directly");
+    }
 
+    {
+        $Parent::BUILD = 0;
+        $Child::BUILD = 0;
 
-    $Parent::BUILD = 0;
-    $Child::BUILD = 0;
+        my $obj = Child->new;
 
-    my $obj = Child->new;
-
-    is($Child::BUILD, 1, "Child's BUILD was run when Child is constructed");
-    is($Parent::BUILD, 1, "Parent's BUILD was run when Child is constructed");
+        is($Child::BUILD, 1, "Child's BUILD was run when Child is constructed");
+        is($Parent::BUILD, 1, "Parent's BUILD was run when Child is constructed");
+    }
 }
 @classes;
 
