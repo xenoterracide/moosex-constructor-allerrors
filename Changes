@@ -1,5 +1,9 @@
 0.015   2011-04-26
 
+  * Remove warning from new test; added repository meta-information. (ether)
+
+0.015   2011-04-26
+
   * Fix BUILD methods not being called in immutable classes (ether)
 
 0.014   2011-04-26
