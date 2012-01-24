@@ -83,6 +83,24 @@ construction.
 
 =head1 METHODS
 
+=head2 has_errors
+
+True if there are any errors.
+
+=head2 add_error
+
+Push a new error to the list (should be an
+L<MooseX::Constructor::AllErrors::Error> object).
+
+=head2 message
+
+Returns the first error message found.
+
+=head2 stringify
+
+Returns the first error message found, along with caller information (filename
+and line number).
+
 =head2 errors
 
 Returns a list of L<MooseX::Constructor::AllErrors::Error> objects representing
