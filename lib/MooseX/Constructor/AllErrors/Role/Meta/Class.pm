@@ -7,7 +7,9 @@ around _inline_BUILDALL => sub {
 
     my @source = $self->$orig(@_);
 
-    my @attrs = grep { defined $_->init_arg } $self->get_all_attributes;
+    my @attrs = grep { defined $_->init_arg }
+        sort { $a->insertion_order <=> $b->insertion_order }
+        $self->get_all_attributes;
 
     my $required = join '', map {
         q{'} . $_->init_arg . q{' => 1,}
