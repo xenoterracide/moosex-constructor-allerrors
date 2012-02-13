@@ -53,7 +53,7 @@ sub tests {
     is($t->attribute, Foo->meta->get_attribute('baz'));
     is($t->data, 'hello');
     like($t->message,
-        qr{^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'Int' with value .*hello.*}
+        qr/^\QAttribute (baz) does not pass the type constraint because: Validation failed for 'Int' with value \E.*hello.*/
     );
 
     TODO: {
@@ -62,7 +62,7 @@ sub tests {
         is($t->attribute, Foo->meta->get_attribute('bletch'));
         is($t->data, 'hello');
         like($t->message,
-            qr{Attribute \(bletch\) does not pass the type constraint because: Validation failed for 'Int' with value .*hello.*}
+            qr/\QAttribute (bletch) does not pass the type constraint because: Validation failed for 'Int' with value \E.*hello.*/
         );
     }
 
@@ -84,7 +84,7 @@ sub tests {
         'correct invalid',
     );
 
-    my $pattern = 'Attribute \(bar\) is required at ' . __FILE__ . " line \\d{2}";
+    my $pattern = "\QAttribute (bar) is required at \E" . __FILE__ . " line \\d{2}";
     like("$e", qr/$pattern/);
 
     eval { Foo->new(bar => 1, quux => 1) };
