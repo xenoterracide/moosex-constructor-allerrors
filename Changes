@@ -1,3 +1,8 @@
+0.018_001
+
+  * avoid reporting errors for undef attributes when MooseX::UndefTolerant is
+    also being employed (ssoriche)
+
 0.017   2012-01-23
 
   * Errors are always returned consistent with attributes' insertion_order.
