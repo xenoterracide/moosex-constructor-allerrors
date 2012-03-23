@@ -1,6 +1,7 @@
 package MooseX::Constructor::AllErrors::Role::Object;
 
 use Moose::Role;
+use Try::Tiny;
 
 my $new_error = sub { 
   my $class = shift;
@@ -36,13 +37,17 @@ around BUILDARGS => sub {
         ? $tc->coerce($args->{$init_arg})
         : $args->{$init_arg};
 
-    unless ($tc->check($value)) {
+    # use the attributes verify_against_type_constraint as that can be wrapped
+    # by other roles, namely MooseX::UndefTolerant
+    try {
+      $attr->verify_against_type_constraint($value);
+    }
+    catch {
       $error->add_error($new_error->(TypeConstraint => {
         attribute => $attr,
         data      => $value,
       }));
-      next;
-    }
+    };
   }
 
   if ($error->has_errors) {
