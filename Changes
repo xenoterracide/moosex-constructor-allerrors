@@ -1,4 +1,4 @@
-0.018_001
+0.018_001 2012-03-23
 
   * avoid reporting errors for undef attributes when MooseX::UndefTolerant is
     also being employed (ssoriche)
