@@ -10,11 +10,6 @@ use MooseX::Constructor::AllErrors::Error::TypeConstraint;
 
 Moose::Exporter->setup_import_methods(
     base_class_roles => [ 'MooseX::Constructor::AllErrors::Role::Object' ],
-    class_metaroles => {
-        ($Moose::VERSION < 1.9900
-            ? (constructor => ['MooseX::Constructor::AllErrors::Role::Meta::Method::Constructor'])
-            : (class       => ['MooseX::Constructor::AllErrors::Role::Meta::Class'])),
-    },
 );
 
 1;
