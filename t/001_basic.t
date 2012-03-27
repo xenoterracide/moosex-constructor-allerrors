@@ -4,7 +4,7 @@ use Test::More tests => 38;
 
 {
     package Foo;
-    
+
     use Moose;
     use MooseX::Constructor::AllErrors;
 

@@ -18,7 +18,7 @@ has caller => (
 
 sub _errors_by_type {
     my ($self, $type) = @_;
-    return [ grep { 
+    return [ grep {
         $_->isa("MooseX::Constructor::AllErrors::Error::$type")
     } $self->errors ];
 }
@@ -128,6 +128,6 @@ L<Moose>
 
 This software is copyright (c) 2009 by Hans Dieter Pearcey. This is free
 software; you can redistribute it and/or modify it under the same terms as perl
-itself. 
+itself.
 
 =cut
