@@ -58,3 +58,4 @@
 ### custom entries
 \..*\.sw.?$
 ^TODO
+todo.txt
