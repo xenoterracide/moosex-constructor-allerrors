@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+  * add explicit prereq for Test::CheckDeps, until the dzil plugin is fixed
+    (ether)
+
 0.019     2012-03-31 18:18:48 America/Vancouver
 
   * remove inlined versions of BUILD - it's useless to perform any checks
