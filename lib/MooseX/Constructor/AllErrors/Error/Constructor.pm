@@ -3,9 +3,13 @@ package MooseX::Constructor::AllErrors::Error::Constructor;
 use Moose;
 
 has errors => (
-    is => 'ro',
     isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error]',
-    auto_deref => 1,
+    traits => ['Array'],
+    handles => {
+        errors => 'elements',
+        has_errors => 'count',
+        add_error => 'push',
+    },
     lazy => 1,
     default => sub { [] },
 );
@@ -24,35 +28,26 @@ sub _errors_by_type {
 }
 
 has missing => (
-    is => 'ro',
     isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error::Required]',
-    auto_deref => 1,
+    traits => ['Array'],
+    handles => { missing => 'elements' },
     lazy => 1,
     default => sub { shift->_errors_by_type('Required') },
 );
 
 has invalid => (
-    is => 'ro',
     isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error::TypeConstraint]',
-    auto_deref => 1,
+    traits => ['Array'],
+    handles => { invalid => 'elements' },
     lazy => 1,
     default => sub { shift->_errors_by_type('TypeConstraint') },
 );
-
-sub has_errors {
-    return scalar @{ $_[0]->errors };
-}
-
-sub add_error {
-    my ($self, $error) = @_;
-    push @{$self->errors}, $error;
-}
 
 sub message {
     my $self = shift;
     confess "$self->message called without any errors"
         unless $self->has_errors;
-    return $self->errors->[0]->message;
+    return ($self->errors)[0]->message;
 }
 
 sub stringify {

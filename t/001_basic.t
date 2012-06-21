@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 38;
+use Test::More tests => 40;
 use Test::Moose;
 
 {
@@ -48,10 +48,11 @@ with_immutable
     my $e = $@;
     my $t;
     isa_ok($e, 'MooseX::Constructor::AllErrors::Error::Constructor');
-    isa_ok($t = $e->errors->[0], 'MooseX::Constructor::AllErrors::Error::Required');
+    isa_ok($t = ($e->errors)[0], 'MooseX::Constructor::AllErrors::Error::Required');
+    is($e->has_errors, 2, 'there are two errors');
     is($t->attribute, Foo->meta->get_attribute('bar'));
     is($t->message, 'Attribute (bar) is required');
-    isa_ok($t = $e->errors->[1], 'MooseX::Constructor::AllErrors::Error::TypeConstraint');
+    isa_ok($t = ($e->errors)[1], 'MooseX::Constructor::AllErrors::Error::TypeConstraint');
     is($t->attribute, Foo->meta->get_attribute('baz'));
     is($t->data, 'hello');
     like($t->message,
@@ -60,7 +61,7 @@ with_immutable
 
     TODO: {
         local $TODO = 'BUILD errors are not yet caught';
-        isa_ok($t = $e->errors->[2], 'MooseX::Constructor::AllErrors::Error::TypeConstraint') or todo_skip 'doh', 3;
+        isa_ok($t = ($e->errors)[2], 'MooseX::Constructor::AllErrors::Error::TypeConstraint') or todo_skip 'doh', 3;
         is($t->attribute, Foo->meta->get_attribute('bletch'));
         is($t->data, 'hello');
         like($t->message,
@@ -70,7 +71,7 @@ with_immutable
 
     is(
         $e->message,
-        $e->errors->[0]->message,
+        ($e->errors)[0]->message,
         "message is first error's message",
     );
 
