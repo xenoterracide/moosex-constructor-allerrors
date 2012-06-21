@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 40;
+use Test::More tests => 42;
 use Test::Moose;
 
 {
@@ -44,12 +44,19 @@ with_immutable
     is($@, '');
     isa_ok($foo, 'Foo');
 
-    eval { Foo->new(baz => "hello") };
+    eval { Foo->new(baz => "hello") }; my $line = __LINE__;
     my $e = $@;
     my $t;
     isa_ok($e, 'MooseX::Constructor::AllErrors::Error::Constructor');
     isa_ok($t = ($e->errors)[0], 'MooseX::Constructor::AllErrors::Error::Required');
     is($e->has_errors, 2, 'there are two errors');
+    my $file = __FILE__;
+    like(
+        $e,
+        qr/^\QAttribute (bar) is required at $file line $line\E/,
+        'stringified error',
+    );
+
     is($t->attribute, Foo->meta->get_attribute('bar'));
     is($t->message, 'Attribute (bar) is required');
     isa_ok($t = ($e->errors)[1], 'MooseX::Constructor::AllErrors::Error::TypeConstraint');
@@ -87,7 +94,7 @@ with_immutable
         'correct invalid',
     );
 
-    my $pattern = "\QAttribute (bar) is required at \E" . __FILE__ . " line \\d{2}";
+    my $pattern = "\QAttribute (bar) is required at \E$file line $line";
     like("$e", qr/$pattern/);
 
     eval { Foo->new(bar => 1, quux => 1) };

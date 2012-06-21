@@ -14,6 +14,11 @@ around BUILDARGS => sub {
   my $args = $self->$orig(@args);
 
   my $error = $new_error->(Constructor => {
+    # counting frames in the callstack is a bit fragile... we should find a
+    # better way...
+    # 1: Class::MOP::Method::Wrapped::__ANON__
+    # 2: Moose::Meta::Class::BUILDARGS
+    # 3: Moose::Object::new
     caller => [ caller(3) ],
   });
 
