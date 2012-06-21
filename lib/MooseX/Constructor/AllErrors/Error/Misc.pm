@@ -31,25 +31,19 @@ C<BUILD>:
 
         my @errors;
 
-        # either foo *or* bar is required
-        push @errors, MooseX::Constructor::AllErrors::Misc->new(
-            message => 'either \'foo\' or \'bar\' must be provided!',
-        ) if not defined $args->{foo} and not defined $args->{bar};
+        # either name *or* id is required
+        push @errors, MooseX::Constructor::AllErrors::Error::Misc->new(
+            message => 'Either \'name\' or \'id\' must be provided',
+        ) if not defined $args->{name} and not defined $args->{id};
 
         ...;
 
         if (@errors)
         {
             my $error = MooseX::Constructor::AllErrors::Error::Constructor->new(
-                caller => [ caller(3) ],
+                caller => [ caller( Class::MOP::class_of($this)->is_immutable ? 2 : 4) ],
             );
-            $error->add_error(
-                MooseX::Constructor::AllErrors::Error::Misc->new(
-                    caller => [ caller(3) ],
-                    message => $_,
-                )
-            ) foreach @errors;
-
+            $error->add_error($_) foreach @errors;
             die $error;
         }
     }
