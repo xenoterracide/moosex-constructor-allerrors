@@ -41,7 +41,7 @@ C<BUILD>:
         if (@errors)
         {
             my $error = MooseX::Constructor::AllErrors::Error::Constructor->new(
-                caller => [ caller( Class::MOP::class_of($this)->is_immutable ? 2 : 4) ],
+                caller => [ caller( Class::MOP::class_of($self)->is_immutable ? 2 : 4) ],
             );
             $error->add_error($_) foreach @errors;
             die $error;

@@ -34,9 +34,9 @@ use Test::Moose;
 
     sub BUILD
     {
-        my ($this, $args) = @_;
+        my ($self, $args) = @_;
 
-        $this->bletch($this->baz) if $this->baz;
+        $self->bletch($self->baz) if $self->baz;
 
         my @errors;
 
@@ -51,7 +51,7 @@ use Test::Moose;
             # adding on to that - given that we run BUILD even after we already
             # have some Required and/or TypeConstraint errors
             my $error = MooseX::Constructor::AllErrors::Error::Constructor->new(
-                caller => [ caller( Class::MOP::class_of($this)->is_immutable ? 2 : 4) ],
+                caller => [ caller( Class::MOP::class_of($self)->is_immutable ? 2 : 4) ],
             );
 
             $error->add_error($_) foreach @errors;
