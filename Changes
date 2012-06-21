@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
   * use of auto_deref in MooseX::Constructor::AllErrors::Error::Constructor
     attributes is replaced by the Array native trait (ether)
+  * new error class for 'Misc' errors has been experimentally added (ether)
 
 0.020     2012-04-10 17:02:51 UTC
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 54;
 use Test::Moose;
 
 {
@@ -28,10 +28,35 @@ use Test::Moose;
         is => 'ro', isa => 'Int'
     );
 
+    has $_ => (
+        is => 'ro', isa => 'Str',
+    ) foreach qw(name id);
+
     sub BUILD
     {
-        my $this = shift;
+        my ($this, $args) = @_;
+
         $this->bletch($this->baz) if $this->baz;
+
+        my @errors;
+
+        # either baz *or* bletch is required
+        push @errors, MooseX::Constructor::AllErrors::Error::Misc->new(
+            message => 'Either \'name\' or \'id\' must be provided',
+        ) if not defined $args->{name} and not defined $args->{id};
+
+        if (@errors)
+        {
+            # TODO: we really should be getting the existing Error object, and
+            # adding on to that - given that we run BUILD even after we already
+            # have some Required and/or TypeConstraint errors
+            my $error = MooseX::Constructor::AllErrors::Error::Constructor->new(
+                caller => [ caller( Class::MOP::class_of($this)->is_immutable ? 2 : 4) ],
+            );
+
+            $error->add_error($_) foreach @errors;
+            die $error;
+        }
     }
 
     no Moose;
@@ -40,17 +65,18 @@ use Test::Moose;
 
 with_immutable
 {
-    my $foo = eval { Foo->new(bar => 1) };
+    my $file = __FILE__;
+
+    my $foo = eval { Foo->new(bar => 1, name => 'me') };
     is($@, '');
     isa_ok($foo, 'Foo');
 
-    eval { Foo->new(baz => "hello") }; my $line = __LINE__;
+    eval { Foo->new(baz => "hello", name => 'me') }; my $line = __LINE__;
     my $e = $@;
     my $t;
     isa_ok($e, 'MooseX::Constructor::AllErrors::Error::Constructor');
     isa_ok($t = ($e->errors)[0], 'MooseX::Constructor::AllErrors::Error::Required');
     is($e->has_errors, 2, 'there are two errors');
-    my $file = __FILE__;
     like(
         $e,
         qr/^\QAttribute (bar) is required at $file line $line\E/,
@@ -67,12 +93,17 @@ with_immutable
     );
 
     TODO: {
-        local $TODO = 'BUILD errors are not yet caught';
-        isa_ok($t = ($e->errors)[2], 'MooseX::Constructor::AllErrors::Error::TypeConstraint') or todo_skip 'doh', 3;
+        local $TODO = 'BUILD errors are not yet caught if there were required/tc errors already found';
+        isa_ok($t = ($e->errors)[2], 'MooseX::Constructor::AllErrors::Error::TypeConstraint') or todo_skip 'doh', 5;
         is($t->attribute, Foo->meta->get_attribute('bletch'));
         is($t->data, 'hello');
         like($t->message,
             qr/\QAttribute (bletch) does not pass the type constraint because: Validation failed for 'Int' with value \E.*hello.*/
+        );
+
+        isa_ok($t = ($e->errors)[3], 'MooseX::Constructor::AllErrors::Error::Misc');
+        is($t->message,
+            q{Either 'name' or 'id' must be provided},
         );
     }
 
@@ -99,6 +130,19 @@ with_immutable
 
     eval { Foo->new(bar => 1, quux => 1) };
     like $@, qr/Illegal division by zero/, "unrecognized error rethrown";
+
+    eval { Foo->new(bar => 1) }; $line = __LINE__;
+    $e = $@;
+    isa_ok($e, 'MooseX::Constructor::AllErrors::Error::Constructor');
+    like(
+        $e,
+        qr/^\QEither 'name' or 'id' must be provided at $file line $line\E/,
+        'stringified error',
+    );
+    isa_ok($t = ($e->errors)[0], 'MooseX::Constructor::AllErrors::Error::Misc');
+    is($t->message,
+        q{Either 'name' or 'id' must be provided},
+    );
 }
 qw(Foo);
 
