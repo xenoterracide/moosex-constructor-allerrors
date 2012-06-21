@@ -14,6 +14,9 @@ has errors => (
     default => sub { [] },
 );
 
+# FIXME - this should be calculated automatically, in a default sub.
+# But manually counting the number of stack frames involved is fragile and
+# prone to error as Moose guts change. We need to find a better way!
 has caller => (
     is => 'ro',
     isa => 'ArrayRef',
