@@ -49,7 +49,9 @@ C<BUILD>:
     }
 
 This code is a little long and unwieldy; it is likely that a shortcut will soon
-be added. (Stay tuned to upcoming releases!)
+be added; it has been suggested that support for a VALIDATE sub be added, which
+is automatically called at construction time before BUILD, to perform
+validations with no side effect. Stay tuned to upcoming releases!
 
 =head1 METHODS
 
