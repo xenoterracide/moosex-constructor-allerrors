@@ -46,6 +46,14 @@ has invalid => (
     default => sub { shift->_errors_by_type('TypeConstraint') },
 );
 
+has misc => (
+    isa => 'ArrayRef[MooseX::Constructor::AllErrors::Error::Misc]',
+    traits => ['Array'],
+    handles => { misc => 'elements' },
+    lazy => 1,
+    default => sub { shift->_errors_by_type('Misc') },
+);
+
 sub message {
     my $self = shift;
     confess "$self->message called without any errors"
@@ -113,6 +121,11 @@ representing each missing argument error that was found.
 
 Returns a list of L<MooseX::Constructor::AllErrors::Error::TypeConstraint>
 objects representing each type constraint error that was found.
+
+=head2 misc
+
+Returns a list of L<MooseX::Constructor::AllErrors::Error::Misc>
+objects representing each miscellaneous error that was found.
 
 =head1 SEE ALSO
 
