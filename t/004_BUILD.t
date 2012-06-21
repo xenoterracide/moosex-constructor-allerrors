@@ -29,7 +29,7 @@ use warnings;
 }
 
 use Test::More;
-use Test::Moose qw(with_immutable);
+use Test::Moose;
 
 my @classes = qw(Parent Child);
 

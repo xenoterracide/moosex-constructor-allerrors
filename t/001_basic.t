@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 38;
+use Test::Moose;
 
 {
     package Foo;
@@ -37,7 +38,8 @@ use Test::More tests => 38;
     no MooseX::Constructor::AllErrors;
 }
 
-sub tests {
+with_immutable
+{
     my $foo = eval { Foo->new(bar => 1) };
     is($@, '');
     isa_ok($foo, 'Foo');
@@ -89,9 +91,6 @@ sub tests {
 
     eval { Foo->new(bar => 1, quux => 1) };
     like $@, qr/Illegal division by zero/, "unrecognized error rethrown";
-};
-
-tests();
-Foo->meta->make_immutable;
-tests();
+}
+qw(Foo);
 

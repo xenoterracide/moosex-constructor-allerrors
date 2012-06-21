@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 4;
+use Test::Moose;
 
 {
     use Moose::Util::TypeConstraints;
@@ -34,14 +35,11 @@ use Test::More tests => 4;
     );
 }
 
+with_immutable
 {
     my $foo = Foo->new(int => -3);
     my $bar = Bar->new(int => -3);
     is($foo->int, 3, 'coercion happens properly');
     is($bar->int, 3, 'coercion happens properly with mx-constructor-allerrors');
-    if (Foo->meta->is_mutable) {
-        Foo->meta->make_immutable;
-        Bar->meta->make_immutable;
-        redo;
-    }
 }
+qw(Foo Bar);
